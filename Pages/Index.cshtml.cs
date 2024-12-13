@@ -27,6 +27,7 @@ namespace BestShop.Pages
                     var apiKey = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
                     Console.WriteLine(apiKey);
+                    Console.WriteLine("Test api keys");
 
                     string sql = "SELECT TOP 4 * FROM books ORDER BY created_at DESC";
                     using (SqlCommand command = new SqlCommand(sql, connection))
