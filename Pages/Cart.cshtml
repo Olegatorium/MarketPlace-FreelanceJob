@@ -1,0 +1,134 @@
+﻿@page
+@model BestShop.Pages.CartModel
+@{
+}
+
+<div class="row border rounded-3">
+    <div class="col-md-8 p-3">
+        <h4>Koszyk</h4>
+
+        @if (Model.errorMessage.Length > 0)
+        {
+            <div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                <strong>@Model.errorMessage</strong>
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Zamknij'></button>
+            </div>
+        }
+        else if (Model.successMessage.Length > 0)
+        {
+            <div class='alert alert-success alert-dismissible fade show' role='alert'>
+                <strong>@Model.successMessage</strong>
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Zamknij'></button>
+            </div>
+        }
+
+        <table class="table align-middle">
+            <tr>
+                <td style="width:100px"></td>
+                <td></td>
+                <td style="width:140px"></td>
+                <td style="width:70px"></td>
+                <td style="width:30px"></td>
+            </tr>
+
+            @foreach (var item in Model.listOrderItems)
+            {
+                <tr>
+                    <td><img src="/images/books/@item.productInfo.ImageFileName" width="100" class="rounded" alt="..."></td>
+                    <td>
+                        <h4>@item.productInfo.Title</h4>
+                        <p>
+                            Kategoria: @item.productInfo.Category<br>
+                            Cena: @(item.productInfo.Price) zł
+                        </p>
+                    </td>
+                    <td>
+                        <a href="/Cart?action=sub&id=@(item.productInfo.Id)" class="btn btn-outline-secondary btn-sm" role="button">-</a>
+                        <span class="border rounded-3 p-2 m-1">@item.numCopies</span>
+                        <a href="/Cart?action=add&id=@(item.productInfo.Id)" class="btn btn-outline-secondary btn-sm" role="button">+</a>
+                    </td>
+                    <td>@(item.totalPrice) zł</td>
+                    <td>
+                        <a href="/Cart?action=delete&id=@(item.productInfo.Id)"><i class="bi bi-trash text-danger h4"></i></a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="col-md-4">
+        <div class="text-white rounded my-2 p-3" style="background-color: #08618d;">
+            <h4>Podsumowanie zamówienia</h4>
+            <hr>
+            @if (HttpContext.Session.GetString("role") == null)
+            {
+                <div class="row">
+                    <div class="col">
+                        <p>Subtoal:</p>
+                    </div>
+                    <div class="col">
+                        <p class="text-end">@(Model.subtotal) zł</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col d-grid">
+                        <a class="btn btn-light" href="/Auth/Register" role="button">Zarejestruj się</a>
+                    </div>
+                    <div class="col d-grid">
+                        <a class="btn btn-outline-light" href="/Auth/Login" role="button">Zaloguj się</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Adres dostawy</label>
+                        <input type="text" class="form-control" asp-for="Address">
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Metoda płatności</label>
+                        <select class="form-select" asp-for="PaymentMethod">
+                            <option value="Płatność przy odbiorze">Płatność przy odbiorze</option>
+                        </select>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col">
+                            <p>Subtoal:</p>
+                        </div>
+                        <div class="col">
+                            <p class="text-end">@(Model.subtotal) zł</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <p>Wysyłka:</p>
+                        </div>
+                        <div class="col">
+                            <p class="text-end">@(Model.shippingFee) zł</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <p>Razem:</p>
+                        </div>
+                        <div class="col">
+                            <p class="text-end">@(Model.total) zł</p>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button class="btn btn-outline-light" type="submit">Przejdź do kasy</button>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+</div>

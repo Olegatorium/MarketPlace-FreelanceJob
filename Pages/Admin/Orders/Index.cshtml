@@ -1,0 +1,73 @@
+﻿@page
+@model BestShop.Pages.Admin.Orders.IndexModel
+@{
+}
+
+<h3 class="rounded p-2 my-2 text-white text-center" style="background-color: #08618d;">Lista zamówień</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Produkty</th>
+            <th>Data</th>
+            <th>Razem</th>
+            <th>Metoda płatności</th>
+            <th>Status płatności</th>
+            <th>Status zamówienia</th>
+            <th>Akcja</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var order in Model.listOrders)
+        {
+            int count = 0;
+            decimal total = order.shippingFee;
+            for (int i = 0; i < order.items.Count; i++)
+            {
+                count += order.items[i].quantity;
+                total += order.items[i].quantity * order.items[i].unitPrice;
+            }
+            <tr>
+                <td>@order.id</td>
+                <td>@count</td>
+                <td>@order.orderDate</td>
+                <td>@(total) zł</td>
+                <td>@order.paymentMethod</td>
+
+                @if (order.paymentStatus.Equals("zaakceptowane"))
+                {
+                    <td><span class="badge bg-success">@order.paymentStatus</span></td>
+                }
+                else
+                {
+                    <td><span class="badge bg-warning text-dark">@order.paymentStatus</span></td>
+                }
+
+                @if (order.orderStatus.Equals("zaakceptowane") || order.orderStatus.Equals("dostarczone")
+               || order.orderStatus.Equals("wysłane"))
+                {
+                    <td><span class="badge bg-success">@order.orderStatus</span></td>
+                }
+                else
+                {
+                    <td><span class="badge bg-warning text-dark">@order.orderStatus</span></td>
+                }
+
+                <td>
+                    <a class="btn btn-primary btn-sm" href="/Admin/Orders/Details?id=@order.id">Szczegóły</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav>
+    <ul class="pagination">
+        @for (int i = 1; i <= Model.totalPages; i++)
+        {
+            <li class="page-item"><a class="page-link" href="?page=@(i)">@i</a></li>
+        }
+    </ul>
+</nav>

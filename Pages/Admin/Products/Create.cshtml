@@ -1,0 +1,79 @@
+﻿@page
+@model BestShop.Pages.Admin.Products.CreateModel
+@{
+}
+
+<h2 class="my-3">Nowy produkt</h2>
+
+@if (Model.errorMessage.Length > 0)
+{
+    <div class='alert alert-warning alert-dismissible fade show' role='alert'>
+        <strong>@Model.errorMessage</strong>
+        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Zamknij'></button>
+    </div>
+}
+else if (Model.successMessage.Length > 0)
+{
+    <div class='alert alert-success alert-dismissible fade show' role='alert'>
+        <strong>@Model.successMessage</strong>
+        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Zamknij'></button>
+    </div>
+}
+
+<form method="POST" enctype="multipart/form-data">
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">Tytuł</label>
+        <div class="col-sm-6">
+            <input class="form-control" asp-for="Title" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">Cena (zł)</label>
+        <div class="col-sm-6">
+            <input class="form-control" asp-for="Price" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">Kategoria</label>
+        <div class="col-sm-6">
+            <select class="form-select" asp-for="Category">
+                <option value="Telefon">Telefon</option>
+                <option value="Laptop">Laptop</option>
+                <option value="Komputer">Komputer</option>
+                <option value="Słuchawki">Słuchawki</option>
+                <option value="Telewizor">Telewizor</option>
+            </select>
+            <span asp-validation-for="Category" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">Opis</label>
+        <div class="col-sm-6">
+            <textarea class="form-control" asp-for="Description"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">Obraz</label>
+        <div class="col-sm-6">
+            <input class="form-control" asp-for="ImageFile" />
+            <span asp-validation-for="ImageFile" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="offset-sm-3 col-sm-3 d-grid">
+            <button type="submit" class="btn btn-primary">Zatwierdź</button>
+        </div>
+        <div class="col-sm-3 d-grid">
+            <a class="btn btn-outline-primary" href="/Admin/Products/Index" role="button">Anuluj</a>
+        </div>
+    </div>
+
+</form>

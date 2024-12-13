@@ -1,0 +1,97 @@
+﻿@page
+@model BestShop.Pages.ProductsModel
+@{
+}
+
+<h2 class="rounded text-center text-white p-2" style="background-color: #08618d;">Lista produktów</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="rounded text-white my-2 p-3 sticky-top" style="background-color: #08618d; top:10px;">
+            <h4 class="mb-3">Zaawansowane wyszukiwanie</h4>
+
+            <form>
+                <div class="mb-3">
+                    <label class="form-label">Szukaj</label>
+                    <input type="text" class="form-control" asp-for="Search" placeholder="Szukaj według tytułu">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Cena</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="number" class="form-control" asp-for="MinPrice" placeholder="Minimalna cena" />
+                        </div>
+                        <div class="col-md-6">
+                            <input type="number" class="form-control" asp-for="MaxPrice" placeholder="Maksymalna cena" />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="mb-3">
+                    <label class="form-label">Kategoria</label>
+                    <select class="form-select" asp-for="Category">
+                        <option value="any">Dowolny</option>
+                        <option value="Telefon">Telefon</option>
+                        <option value="Laptop">Laptop</option>
+                        <option value="Komputer">Komputer</option>
+                        <option value="Słuchawki">Słuchawki</option>
+                        <option value="Telewizor">Telewizor</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col d-grid">
+                        <button type="submit" class="btn btn-outline-light">Szukaj</button>
+                    </div>
+                    <div class="col d-grid">
+                        <a class="btn btn-outline-light" href="/Products" role="button">Oczyścić</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <table class="table align-middle">
+            <tbody>
+                @foreach (var item in Model.productsList)
+                {
+                    <tr>
+                        <td style="width:200px">
+                            <img src="/images/books/@item.ImageFileName" class="img-fluid rounded" alt="..." />
+                        </td>
+                        <td>
+                            <h3>@item.Title</h3>
+                            <p>
+                                Kategoria: @item.Category<br>
+                            </p>
+                            <h4>@(item.Price) zł</h4>
+                            <a class="btn btn-primary btn-sm my-2" href="/BookDetails?id=@(item.Id)" role="button">Szczegóły</a>
+                            <button type="button" class="btn btn-warning btn-sm my-2" onclick="addToCart(this, @item.Id)">
+                                Dodaj do koszyka <i class="bi bi-cart4"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                @for (int i = 1; i <= Model.totalPages; i++)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page=@(i)&Search=@(Model.Search)&MinPrice=@(Model.MinPrice)&MaxPrice=@(Model.MaxPrice)&PageRange=@(Model.PageRange)&Category=@(Model.Category)">
+                            @i
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+
+    </div>
+</div>

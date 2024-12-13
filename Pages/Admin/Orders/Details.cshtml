@@ -1,0 +1,176 @@
+﻿@page
+@model BestShop.Pages.Admin.Orders.DetailsModel
+@{
+}
+
+<h3 class="rounded p-2 my-2 text-white text-center" style="background-color: #08618d;">Szczegóły zamówienia</h3>
+
+<div class="row mb-3 py-3">
+    <div class="col-lg-6">
+        <div class="border rounded p-3 h-100">
+            <h3>Zamówienie</h3>
+
+            <table class="table">
+                <tr>
+                    <td>ID zamówienia</td>
+                    <td>@Model.orderInfo.id</td>
+                </tr>
+                <tr>
+                    <td>Data zamówienia</td>
+                    <td>@Model.orderInfo.orderDate</td>
+                </tr>
+                <tr>
+                    <td>Adres dostawy</td>
+                    <td>@Model.orderInfo.deliveryAddress</td>
+                </tr>
+                <tr>
+                    <td>Metoda płatności</td>
+                    <td>@Model.orderInfo.paymentMethod</td>
+                </tr>
+                <tr>
+                    <td>Status płatności</td>
+                    <td>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                            @Model.orderInfo.paymentStatus
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Status zamówienia</td>
+                    <td>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#orderModal">
+                            @Model.orderInfo.orderStatus
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="border rounded p-3 h-100">
+            <h3>Klient</h3>
+
+            <table class="table">
+                <tr>
+                    <td>ID klienta</td>
+                    <td>@Model.userInfo.id</td>
+                </tr>
+                <tr>
+                    <td>Imię i nazwisko</td>
+                    <td>@Model.userInfo.firstName @Model.userInfo.lastName</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>@Model.userInfo.email</td>
+                </tr>
+                <tr>
+                    <td>Telefon</td>
+                    <td>@Model.userInfo.phone</td>
+                </tr>
+                <tr>
+                    <td>Adres</td>
+                    <td>@Model.userInfo.address</td>
+                </tr>
+                <tr>
+                    <td>Data rejestracji</td>
+                    <td>@Model.userInfo.createdAt</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Opis</th>
+            <th style="width:100px">Jednostki</th>
+            <th style="width:100px">Kwota</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            decimal subtotal = 0;
+        }
+        @foreach (var item in Model.orderInfo.items)
+        {
+            subtotal += item.unitPrice * item.quantity;
+
+            <tr>
+                <td>
+                    <h3>@item.productInfo.Title</h3>
+                    @(item.unitPrice) zł
+                </td>
+                <td>@item.quantity</td>
+                <td>@(item.unitPrice * item.quantity) zł</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="text-end m-3">
+    <strong>Razem:</strong> @(subtotal) zł<br />
+    <strong>Koszt dostawy:</strong> @(Model.orderInfo.shippingFee) zł<br />
+    <strong>Łącznie:</strong> @(subtotal + Model.orderInfo.shippingFee) zł <br />
+</div>
+
+<div class="m-0">
+    <a href="/Admin/Orders/Index" class="btn btn-primary">Powrót do zamówień</a>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Zaktualizuj status płatności</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zamknij"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" name="id" value="@Model.orderInfo.id" />
+                    <label>Status płatności</label>
+                    <select class="form-select mb-2" name="payment_status" asp-for="orderInfo.paymentStatus">
+                        <option value="oczekujące">oczekujące</option>
+                        <option value="zaakceptowane">zaakceptowane</option>
+                        <option value="anulowane">anulowane</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Zaktualizuj status zamówienia</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zamknij"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" name="id" value="@Model.orderInfo.id" />
+                    <label>Status zamówienia</label>
+                    <select class="form-select mb-2" name="order_status" asp-for="orderInfo.orderStatus">
+                        <option value="utworzone">utworzone</option>
+                        <option value="zaakceptowane">zaakceptowane</option>
+                        <option value="anulowane">anulowane</option>
+                        <option value="wysłane">wysłane</option>
+                        <option value="dostarczone">dostarczone</option>
+                        <option value="zwrócone">zwrócone</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+            </div>
+        </div>
+    </div>
+</div>

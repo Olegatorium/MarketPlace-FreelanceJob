@@ -1,0 +1,73 @@
+﻿@page
+@model BestShop.Pages.Admin.Products.IndexModel
+@{
+}
+
+<h2 class="my-3">Lista produktów</h2>
+
+<div class="row mb-3">
+    <div class="col">
+        <a class='btn btn-primary' href='/Admin/Products/Create'>Nowy produkt</a>
+    </div>
+    <div class="col">
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" name="search" value="@Model.search" placeholder="Szukaj według tytułu">
+            <button class="btn btn-outline-success" type="submit">Szukaj</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function sortTable(column) {
+        let order = "desc";
+        let currentColumn = '@Model.column';
+        let currentOrder = '@Model.order';
+
+        if (column == currentColumn) {
+            if (currentOrder == "asc") order = "desc";
+            else order = "asc";
+        }
+
+        window.location.href = '?search=@Model.search&column=' + column + '&order=' + order;
+    }
+</script>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th style="cursor: pointer;" onclick="sortTable('id')">ID</th>
+            <th style="cursor: pointer;" onclick="sortTable('title')">Tytuł</th>
+            <th style="cursor: pointer;" onclick="sortTable('price')">Cena</th>
+            <th style="cursor: pointer;" onclick="sortTable('category')">Kategoria</th>
+            <th>Obraz</th>
+            <th style="cursor: pointer;" onclick="sortTable('created_at')">Utworzono</th>
+            <th>Akcja</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.productList)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Title</td>
+                <td>@(item.Price) zł</td>
+                <td>@item.Category</td>
+                <td><img src="/images/books/@item.ImageFileName" width="100"></td>
+                <td>@item.CreatedAt</td>
+                <td style="white-space:nowrap">
+                    <a class="btn btn-primary btn-sm" href="/Admin/Products/Edit?id=@item.Id">Edytuj</a>
+                    <a class="btn btn-danger btn-sm" href="/Admin/Products/Delete?id=@item.Id">Usuń</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav>
+    <ul class="pagination">
+        @for (int i = 1; i <= Model.totalPages; i++)
+        {
+            <li class="page-item"><a class="page-link" href="?page=@i&search=@Model.search&column=@Model.column&order=@Model.order">@i</a></li>
+        }
+    </ul>
+</nav>
