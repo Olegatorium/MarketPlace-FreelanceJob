@@ -18,11 +18,6 @@ namespace BestShop.Pages
 
         public void OnGet()
         {
-            var apiKey = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
-
-            Console.WriteLine(apiKey);
-            Console.WriteLine("Test api keys");
-
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
